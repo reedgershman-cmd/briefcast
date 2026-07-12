@@ -22,6 +22,15 @@ def smtp_creds() -> tuple[str, str] | None:
     return (user, pw) if user and pw else None
 
 
+def smtp_host() -> tuple[str, int]:
+    return (os.environ.get("BRIEFCAST_SMTP_HOST", "smtp.gmail.com"),
+            int(os.environ.get("BRIEFCAST_SMTP_PORT", "465")))
+
+
+def imap_host() -> str:
+    return os.environ.get("BRIEFCAST_IMAP_HOST", "imap.gmail.com")
+
+
 def send_email(to: list[str], subject: str, html: str, text: str,
                attachments: list[Path] | None = None,
                from_name: str = "The Weekly Signal") -> bool:
@@ -39,7 +48,8 @@ def send_email(to: list[str], subject: str, html: str, text: str,
     for path in attachments or []:
         msg.add_attachment(path.read_bytes(), maintype="text", subtype="plain",
                            filename=path.name)
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=30) as smtp:
+    host, port = smtp_host()
+    with smtplib.SMTP_SSL(host, port, timeout=30) as smtp:
         smtp.login(user, pw)
         smtp.send_message(msg)
     log.info("emailed %s: %s", to, subject)

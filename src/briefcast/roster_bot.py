@@ -213,7 +213,7 @@ def check_inbox(cfg: Config, roster_path: Path = ROOT / "podcasts.yaml") -> bool
         return False
 
     changed = False
-    imap = imaplib.IMAP4_SSL("imap.gmail.com")
+    imap = imaplib.IMAP4_SSL(notify.imap_host())
     try:
         imap.login(user, pw)
         imap.select("INBOX")
