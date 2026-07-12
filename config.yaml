@@ -47,13 +47,14 @@ delivery:
   # Weekly email with the written brief + attachments, sent after each episode publishes.
   # Requires BRIEFCAST_SMTP_USER / BRIEFCAST_SMTP_PASS (a Gmail address + app password).
   email_enabled: true
-  email_to: ["REPLACE_WITH_LISTENER_EMAIL"]
+  # Reed's address until Marcello's is added; then make it ["marcello@...", "reedgershman@gmail.com"]
+  email_to: ["reedgershman@gmail.com"]
   email_from_name: "The Weekly Signal"
 
 roster_bot:
   # Only emails from these addresses can change the podcast lineup.
   allowed_senders:
-    - "REPLACE_WITH_LISTENER_EMAIL"
+    # Add Marcello's address here when known.
     - "reedgershman@gmail.com"
 
 publish:

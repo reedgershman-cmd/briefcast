@@ -66,11 +66,18 @@ def resolve_feed(show_name: str) -> tuple[str, str] | None:
         timeout=20,
     )
     resp.raise_for_status()
+    stop = {"the", "a", "podcast", "show", "pod", "with"}
+    want = {w for w in re.findall(r"[a-z0-9'-]+", show_name.casefold()) if w not in stop}
     for hit in resp.json().get("results", []):
         feed_url = hit.get("feedUrl")
         if not feed_url:
             continue
         name = hit.get("collectionName", show_name)
+        got = set(re.findall(r"[a-z0-9'-]+", name.casefold()))
+        # Reject fuzzy matches that share no meaningful word with the request.
+        if want and not (want & got):
+            log.info("rejecting weak match %r for query %r", name, show_name)
+            continue
         try:
             podcast = Podcast(name=name, feed=feed_url)
             parsed = feeds.fetch_feed(podcast)
@@ -113,14 +120,20 @@ def parse_email(subject: str, body: str, roster: list[dict]) -> dict:
     return _regex_parse(subject + "\n" + body)
 
 
+def _clause(captured: str) -> str:
+    """Trim a captured show name at conjunctions so 'X and drop Y' -> 'X'."""
+    return re.split(r"\s+(?:and|also|then|plus|but)\b", captured, maxsplit=1,
+                    flags=re.I)[0].strip()
+
+
 def _regex_parse(text: str) -> dict:
     actions = []
     for m in re.finditer(r"\b(?:add|follow|include)\s+(?:the\s+)?([^\n.,;!?]{3,60})",
                          text, re.I):
-        actions.append({"op": "add", "show": m.group(1).strip()})
+        actions.append({"op": "add", "show": _clause(m.group(1))})
     for m in re.finditer(r"\b(?:remove|drop|delete|unsubscribe(?:\s+from)?|pause)\s+"
                          r"(?:the\s+)?([^\n.,;!?]{3,60})", text, re.I):
-        actions.append({"op": "remove", "show": m.group(1).strip()})
+        actions.append({"op": "remove", "show": _clause(m.group(1))})
     for m in re.finditer(r"\b(?:swap|substitute|replace)\s+(?:the\s+)?([^\n.,;!?]{3,60}?)"
                          r"\s+(?:for|with)\s+(?:the\s+)?([^\n.,;!?]{3,60})", text, re.I):
         actions.append({"op": "remove", "show": m.group(1).strip()})
