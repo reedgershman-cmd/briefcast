@@ -1,0 +1,41 @@
+# The podcast roster. To ADD a show: add a block with a name and its RSS feed url.
+# To PAUSE a show without deleting it: set active: false.
+# To SUBSTITUTE: pause one, add another. The pipeline picks up changes on the next weekly run.
+#
+# priority: 1 = always include if it published this week; 2 = include if room; 3 = only on slow weeks.
+
+podcasts:
+  - name: Dwarkesh Podcast
+    feed: https://api.substack.com/feed/podcast/69345.rss
+    priority: 1
+    active: true
+
+  - name: The Knowledge Project
+    feed: https://theknowledgeproject.libsyn.com/rss
+    priority: 1
+    active: true
+
+  - name: Acquired
+    feed: https://feeds.transistor.fm/acquired
+    priority: 1
+    active: true
+
+  - name: Invest Like the Best
+    feed: https://feeds.megaphone.fm/investlikethebest
+    priority: 1
+    active: true
+
+  - name: EconTalk
+    feed: https://feeds.simplecast.com/wgl4xEgL
+    priority: 2
+    active: true
+
+  - name: Conversations with Tyler
+    feed: https://cowenconvos.libsyn.com/rss
+    priority: 2
+    active: true
+
+  - name: Lex Fridman Podcast
+    feed: https://lexfridman.com/feed/podcast/
+    priority: 2
+    active: true

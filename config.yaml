@@ -1,0 +1,52 @@
+# Briefcast configuration.
+
+listener:
+  name: Marcello
+  # Used by the AI to decide which ideas matter and how to frame "why it matters".
+  profile: >
+    Sophisticated investor and real estate developer with active projects in Miami and NYC.
+    Deep interests: AI and its economic impact, investing and markets (hedge funds, public
+    and private markets), real estate development, mental models and decision making,
+    history and institutions, health and longevity. Prefers synthesis over summary:
+    connect ideas across thinkers, flag second-order effects, note when a point from one
+    podcast reinforces or contradicts another, and tie ideas back to real estate and
+    investing where genuinely relevant. No fluff.
+
+episode:
+  # A guide, not a hard rule. The script generator aims for this range but will run
+  # longer on idea-rich weeks and shorter on thin ones.
+  target_minutes_min: 18
+  target_minutes_max: 22
+  # Max source episodes to process per week (cost control).
+  max_source_episodes: 8
+  # Look back this many days for "new" episodes each run.
+  lookback_days: 8
+  show_title: "The Weekly Signal"
+  show_author: "Briefcast"
+  show_description: >
+    A private weekly brief: the biggest ideas from this week's best podcasts,
+    synthesized into one conversation — with sound bites from the thinkers themselves.
+
+models:
+  synthesis: claude-sonnet-5          # per-episode digests + weekly synthesis + script
+  transcription: whisper-1            # OpenAI, returns segment timestamps
+  tts: gpt-4o-mini-tts                # narrator voice
+  tts_voice: onyx
+
+audio:
+  # Loudness target for all segments (podcast standard).
+  lufs: -16
+  bitrate: 96k
+  # Padding around extracted sound bites, seconds.
+  clip_pad_s: 0.25
+  # Hard bounds on any single sound bite length, seconds.
+  clip_min_s: 8
+  clip_max_s: 75
+
+publish:
+  # Public base URL where docs/ is served (GitHub Pages). Set after enabling Pages.
+  base_url: "https://reedgershman-cmd.github.io/briefcast"
+  # Unguessable path token so the feed URL is private-by-obscurity. Regenerate to rotate.
+  feed_token: "0f64fd67bb084986917f11c7b283eaf6"
+  # How many past episodes to keep in the RSS feed.
+  feed_keep: 26
