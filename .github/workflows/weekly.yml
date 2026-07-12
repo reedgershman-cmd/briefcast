@@ -21,6 +21,16 @@ jobs:
     permissions:
       contents: write
     steps:
+      - name: Check API keys are configured
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          if [ -z "$ANTHROPIC_API_KEY" ] || [ -z "$OPENAI_API_KEY" ]; then
+            echo "::error::Missing repo secrets. Add ANTHROPIC_API_KEY and OPENAI_API_KEY under Settings -> Secrets and variables -> Actions."
+            exit 1
+          fi
+
       - uses: actions/checkout@v4
 
       - name: Install ffmpeg
