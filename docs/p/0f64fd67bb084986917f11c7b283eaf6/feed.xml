@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>The Weekly Signal</title>
+  <link>https://reedgershman-cmd.github.io/briefcast/p/0f64fd67bb084986917f11c7b283eaf6/</link>
+  <language>en-us</language>
+  <description>A private weekly brief: the biggest ideas from this week&#x27;s best podcasts, synthesized into one conversation — with sound bites from the thinkers themselves.</description>
+  <itunes:author>Briefcast</itunes:author>
+  <itunes:block>Yes</itunes:block>
+  <itunes:explicit>false</itunes:explicit>
+  <atom:link href="https://reedgershman-cmd.github.io/briefcast/p/0f64fd67bb084986917f11c7b283eaf6/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>The Layer Beneath: Narrative Capital, Nobel History, and the Psychology of Risk</title>
+    <guid isPermaLink="false">briefcast-2026-07-12</guid>
+    <pubDate>Sun, 12 Jul 2026 11:00:00 +0000</pubDate>
+    <link>https://reedgershman-cmd.github.io/briefcast/p/0f64fd67bb084986917f11c7b283eaf6/2026-07-12.html</link>
+    <description>The strongest cross-cutting theme this week is that **durable advantage lives one level below the thing everyone is looking at** — below the asset, below the invention, below the track record. Jeremy Giffon (Invest Like the Best) argues capital doesn&#x27;t follow fundamentals, it follows narrative, and the narrative is now priced in real time on one shared feed. Joel Mokyr (Conversations with Tyler), fresh off his Nobel, shows that the West&#x27;s five-century lead came not from inventions but from a culture-institution feedback loop that made improvement itself a habit. Gio Valiante (Knowledge Project) locates the same story inside a single skull: the binding constraint on a portfolio manager is not skill but confidence, a depreciating asset almost nobody manages deliberately. And Adam Brown&#x27;s general relativity lecture (Dwarkesh) is secretly a masterclass in the same move — Einstein won by taki</description>
+    <enclosure url="https://reedgershman-cmd.github.io/briefcast/p/0f64fd67bb084986917f11c7b283eaf6/episodes/2026-07-12.mp3" length="13230020" type="audio/mpeg"/>
+    <itunes:duration>18:22</itunes:duration>
+    <itunes:episodeType>full</itunes:episodeType>
+  </item>
+
+</channel>
+</rss>
