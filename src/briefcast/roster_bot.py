@@ -217,15 +217,19 @@ def check_inbox(cfg: Config, roster_path: Path = ROOT / "podcasts.yaml") -> bool
     try:
         imap.login(user, pw)
         imap.select("INBOX")
-        _, data = imap.search(None, "UNSEEN")
-        for num in (data[0].split() if data and data[0] else []):
+        # Only ever look at (and mark seen) mail from allowlisted senders; the
+        # rest of the inbox is left completely untouched.
+        nums: list[bytes] = []
+        for addr in allowed:
+            _, data = imap.search(None, "UNSEEN", "FROM", f'"{addr}"')
+            if data and data[0]:
+                nums += data[0].split()
+        for num in dict.fromkeys(nums):
             _, msg_data = imap.fetch(num, "(BODY.PEEK[])")
             msg = email.message_from_bytes(msg_data[0][1])
             sender = email.utils.parseaddr(msg.get("From", ""))[1].casefold()
             subject = _decode(msg.get("Subject"))
             if sender not in allowed:
-                log.info("ignoring email from %s", sender)
-                imap.store(num, "+FLAGS", "\\Seen")
                 continue
 
             body = _body_text(msg)
