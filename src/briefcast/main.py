@@ -6,7 +6,7 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import assemble, audio, feeds, publish, synthesize, transcribe
+from . import assemble, audio, feeds, notify, publish, synthesize, transcribe
 from .config import ROOT, Config, is_mock, load_roster
 from .state import load_state, save_state
 
@@ -103,12 +103,30 @@ def cmd_run(args) -> int:
     state["processed_guids"] += [ep.guid for ep in selected]
     save_state(state)
 
-    base = cfg.get("publish", "base_url", default="").rstrip("/")
     token = cfg.get("publish", "feed_token")
+    pdir = publish.DOCS / "p" / token
+    try:
+        notify.send_weekly_email(
+            cfg, entry, brief,
+            brief_path=pdir / "briefs" / f"{date_str}.md",
+            text_path=pdir / "text" / f"{date_str}.txt",
+        )
+    except Exception as e:
+        log.warning("weekly email failed (episode still published): %s", e)
+
+    base = cfg.get("publish", "base_url", default="").rstrip("/")
     log.info("done: %s min episode, %s clips", round(entry["duration_s"] / 60),
              entry["clips_used"])
     log.info("feed: %s/p/%s/feed.xml", base, token)
     log.info("page: %s/p/%s/%s.html", base, token, date_str)
+    return 0
+
+
+def cmd_roster_bot(args) -> int:
+    from . import roster_bot
+
+    changed = roster_bot.check_inbox(Config.load())
+    print("ROSTER_CHANGED" if changed else "no changes")
     return 0
 
 
@@ -135,6 +153,10 @@ def cli() -> None:
 
     vf = sub.add_parser("validate-feeds", help="check every RSS feed in podcasts.yaml")
     vf.set_defaults(fn=cmd_validate_feeds)
+
+    rb = sub.add_parser("roster-bot",
+                        help="poll the inbox for listener lineup-change emails")
+    rb.set_defaults(fn=cmd_roster_bot)
 
     args = ap.parse_args()
     sys.exit(args.fn(args))

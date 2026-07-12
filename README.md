@@ -63,11 +63,32 @@ Runs weekly on GitHub Actions (Mondays 5:30am ET); no computer needs to be on.
 | GitHub Actions + Pages | free |
 | **Total** | **~$5–7/week** |
 
-## Changing the podcast lineup
+## The listener experience (zero-tech by design)
+
+The listener never touches GitHub, YAML, or URLs. Their entire interface:
+
+1. **Apple Podcasts** — a new episode appears every Monday morning (subscribed once, by you).
+2. **Email** — the written brief arrives in their inbox when the episode publishes, with the
+   brief + full episode text attached for their ChatGPT knowledge base.
+3. **Replying to that email in plain English** — "add the All-In podcast", "drop the physics
+   one", "swap EconTalk for Odd Lots". The Roster Bot (runs every 30 min) parses the request
+   (Claude, with regex fallback), finds the show's RSS feed automatically via Apple's podcast
+   directory, validates it, updates the roster, and replies with a confirmation and the new
+   lineup. Only emails from `roster_bot.allowed_senders` are honored.
+
+### Email setup (one-time)
+
+1. Create a dedicated Gmail (e.g. `theweeklysignal.xyz@gmail.com`), enable 2FA, then create an
+   **App Password** (Google Account → Security → App passwords).
+2. Add repo secrets `BRIEFCAST_SMTP_USER` (the Gmail address) and `BRIEFCAST_SMTP_PASS` (the
+   app password).
+3. In `config.yaml`, set `delivery.email_to` and `roster_bot.allowed_senders` to the
+   listener's real email address.
+
+## Changing the podcast lineup (manually)
 
 Edit `podcasts.yaml` — add a block with the show's RSS feed URL, or set `active: false` to pause
-one. `priority: 1` shows get first claim on the weekly episode slots. Find any show's RSS URL at
-<https://podnews.net> (search the show, copy "RSS feed"). Then run
+one. `priority: 1` shows get first claim on the weekly episode slots. Then run
 `uv run briefcast validate-feeds` to confirm the feed parses.
 
 Episode length, the listener profile the AI writes for, models, and loudness are all in `config.yaml`.

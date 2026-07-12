@@ -1,0 +1,45 @@
+name: Roster Bot
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # check the inbox every 30 minutes
+  workflow_dispatch:
+
+concurrency:
+  group: roster-bot
+  cancel-in-progress: false
+
+jobs:
+  poll:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Check inbox for lineup changes
+        env:
+          BRIEFCAST_SMTP_USER: ${{ secrets.BRIEFCAST_SMTP_USER }}
+          BRIEFCAST_SMTP_PASS: ${{ secrets.BRIEFCAST_SMTP_PASS }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: uv run briefcast roster-bot
+
+      - name: Commit roster changes
+        run: |
+          git config user.name "briefcast-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add podcasts.yaml
+          if git diff --cached --quiet; then
+            echo "No lineup changes."
+          else
+            git commit -m "Lineup change requested by listener"
+            git pull --rebase
+            git push
+          fi

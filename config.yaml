@@ -43,6 +43,19 @@ audio:
   clip_min_s: 8
   clip_max_s: 75
 
+delivery:
+  # Weekly email with the written brief + attachments, sent after each episode publishes.
+  # Requires BRIEFCAST_SMTP_USER / BRIEFCAST_SMTP_PASS (a Gmail address + app password).
+  email_enabled: true
+  email_to: ["REPLACE_WITH_LISTENER_EMAIL"]
+  email_from_name: "The Weekly Signal"
+
+roster_bot:
+  # Only emails from these addresses can change the podcast lineup.
+  allowed_senders:
+    - "REPLACE_WITH_LISTENER_EMAIL"
+    - "reedgershman@gmail.com"
+
 publish:
   # Public base URL where docs/ is served (GitHub Pages). Set after enabling Pages.
   base_url: "https://reedgershman-cmd.github.io/briefcast"

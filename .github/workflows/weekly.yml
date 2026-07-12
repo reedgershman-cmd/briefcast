@@ -46,6 +46,8 @@ jobs:
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          BRIEFCAST_SMTP_USER: ${{ secrets.BRIEFCAST_SMTP_USER }}
+          BRIEFCAST_SMTP_PASS: ${{ secrets.BRIEFCAST_SMTP_PASS }}
         run: |
           EXTRA=""
           if [ -n "${{ github.event.inputs.max_episodes }}" ]; then
@@ -62,5 +64,6 @@ jobs:
             echo "Nothing new this week."
           else
             git commit -m "Weekly Signal $(date -u +%F)"
+            git pull --rebase
             git push
           fi
